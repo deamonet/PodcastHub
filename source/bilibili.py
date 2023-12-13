@@ -5,9 +5,6 @@ import requests as r
 from podcast import PodcastEpisode, Podcast
 
 
-
-
-
 class BiliPodcast:
 
     def __init__(self):
@@ -65,7 +62,8 @@ class BiliPodcast:
 
     @staticmethod
     def audio_url(uid: int, aid: str, cid: str):
-        url_bilibili_video = f"https://api.bilibili.com/x/player/playurl?avid={aid}&cid={cid}&qn=16&otype=json&fourk=1&fnver=0&fnval=4048"
+        url_bilibili_video = (f"https://api.bilibili.com/x/player/playurl?avid={aid}&cid={cid}&qn=16&otype=json&fourk"
+                              f"=1&fnver=0&fnval=4048")
         headers_bilibili_video = {
             "Referer": f"https://space.bilibili.com/{uid}/",
             'Host': 'api.bilibili.com',
