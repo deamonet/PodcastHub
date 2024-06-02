@@ -19,8 +19,8 @@ def queue_in(task: QueueTask):
     if is_queued(task):
         return
     redis_client.set(DELIMITER.join([CONFIG.queue.is_queued, task.name, task.identifier]), 1, ex=DAY_SECONDS)
-    redis_client.rpush(CONFIG.queue.jobs_queue, json.dumps(task.__dict__))
+    redis_client.rpush(CONFIG.queue.task_queue, json.dumps(task.__dict__))
 
 
 def queue_out() -> Awaitable[list] | list:
-    return redis_client.blpop(CONFIG.queue.jobs_queue)
+    return redis_client.blpop(CONFIG.queue.task_queue)

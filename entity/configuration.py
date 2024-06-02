@@ -12,7 +12,7 @@ class NetAddress(BaseModel):
 
 
 class Queue(BaseModel):
-    jobs_queue: str
+    task_queue: str
     is_queued: str
 
 
