@@ -1,0 +1,14 @@
+rsshub:
+  protocol: http
+  host: omv.local
+  port: 1200
+redis:
+  protocol: redis
+  host: omv.local
+  port: 6379
+queue:
+  jobs_queue: JOBS
+  is_queued: IS_QUEUED
+listen:
+  bilibili:
+    - 199676483

@@ -2,7 +2,7 @@ import json
 
 import requests as r
 
-from podcast import PodcastEpisode, Podcast
+from entity.podcast import PodcastEpisode, Podcast
 
 
 class BiliPodcast:
