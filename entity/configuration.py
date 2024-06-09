@@ -11,13 +11,37 @@ class NetAddress(BaseModel):
         return f"{self.protocol}://{self.host}:{self.port}"
 
 
-class Queue(BaseModel):
+class Cache(BaseModel):
     task_queue: str
     is_queued: str
+    expire_seconds: int
+
+
+class User(BaseModel):
+    id: str
+    title: str | None = None
+    category: list[str] | None = None
+    image_url: str | None = None
+    description: str | None = None
+
+
+class Listen(BaseModel):
+    user: list[User]
+    route: str
+    video_url_prefix: str
+
+
+class Storage(BaseModel):
+    root_path: str
+    video: str
+    audio: str
+    episode: str
+    static: str
 
 
 class Configuration(BaseModel):
     rsshub: NetAddress
     redis: NetAddress
-    queue: Queue
-    listen: dict[str, list[int]]
+    cache: Cache
+    listen: dict[str, Listen]
+    storage: Storage

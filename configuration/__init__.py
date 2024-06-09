@@ -9,4 +9,7 @@ except ImportError:
 
 with open("../application.yml", 'r') as stream:
     CONFIG = Configuration.model_validate(load(stream, Loader=Loader))
+    CONFIG.storage.audio = CONFIG.storage.root_path + CONFIG.storage.audio
+    CONFIG.storage.video = CONFIG.storage.root_path + CONFIG.storage.video
+    CONFIG.storage.episode = CONFIG.storage.root_path + CONFIG.storage.episode
     print(CONFIG)

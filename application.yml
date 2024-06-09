@@ -2,13 +2,31 @@ rsshub:
   protocol: http
   host: omv.local
   port: 1200
+
 redis:
   protocol: redis
   host: omv.local
   port: 6379
-queue:
+
+cache:
   task_queue: podcast:queue:download_task
   is_queued: podcast:queue:queued
+  expire_seconds: 86400
+
 listen:
   bilibili:
-    - 199676483
+    user:
+      - id: 199676483
+        title: str
+        image_url: empty
+        category: empty
+        description: empty
+    route: user/dynamic
+    video_url_prefix: https://www.bilibili.com/video/
+
+storage:
+  root_path: /tmp/podcast
+  video: /video
+  audio: /audio
+  episode: /episode
+  static: /static
