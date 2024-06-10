@@ -1,7 +1,7 @@
 import re
 
 from configuration import CONFIG
-from rss.update import Update
+from update.abstract_update import Update
 
 
 class BilibiliUpdate(Update):

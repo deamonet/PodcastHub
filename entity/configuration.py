@@ -18,7 +18,7 @@ class Cache(BaseModel):
 
 
 class User(BaseModel):
-    id: str
+    id: int
     title: str | None = None
     author: str | None = None
     category: list[str] | None = None

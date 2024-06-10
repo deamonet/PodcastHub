@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 
 from configuration import CONFIG
+from util import user_utils
 
 
 @dataclass
 class QueueTask:
-    id: str
+    id: int
     name: str
     identifier: str
     prefix: str
@@ -21,13 +22,15 @@ class QueueTask:
 
 
 def construct(json_dict: dict[str, str]):
-    task = QueueTask("", "", "")
+    task = QueueTask("", "", 0)
     for key, value in json_dict.items():
         setattr(task, key, value)
 
-    task.prefix = CONFIG.listen[task.name].video_url_prefix
-    task.title = CONFIG.listen[task.name].title
-    task.category = CONFIG.listen[task.name].category
-    task.description = CONFIG.listen[task.name].description
-    task.image = CONFIG.listen[task.name].image_url
+    listen = CONFIG.listen[task.name]
+    task.prefix = listen.video_url_prefix
+    user = user_utils.match_user(task.name, task.id)
+    task.title = user.title
+    task.category = user.category
+    task.description = user.description
+    task.image = user.image_url
     return task

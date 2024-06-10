@@ -1,17 +1,15 @@
 import itertools
-import cache
 import logging
-import requests
 
+import requests
+from rss_parser import RSSParser
+
+import cache
 from configuration import CONFIG
 from entity.configuration import User
 from entity.queue_task import QueueTask
-from rss import parse
-from rss.update.bilibili import BilibiliUpdate
 
 logger = logging.getLogger(__name__)
-
-UPDATE_TASKS = (BilibiliUpdate())
 
 
 class Update:
@@ -43,3 +41,13 @@ class Update:
     def main_flow(self):
         for user in self.user:
             self.update_one_user(user)
+
+
+def parse(rss: str) -> list[str]:
+    rss = RSSParser.parse(rss)
+    contents = []
+    for item in rss.channel.items:
+        logger.info(item.content.description.content)
+        contents.append(item.content.description.content)
+
+    return contents

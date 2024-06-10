@@ -20,7 +20,8 @@ listen:
         author: str
         title: str
         image_url: empty
-        category: empty
+        category:
+          - empty
         description: empty
     route: user/dynamic
     video_url_prefix: https://www.bilibili.com/video/

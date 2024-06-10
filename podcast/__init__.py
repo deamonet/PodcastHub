@@ -6,9 +6,9 @@ from feedgen.feed import FeedGenerator
 import cache
 from configuration import CONFIG
 from constant import AUDIO_EXTENSION
-from entity.configuration import User
 from entity.podcast import Podcast, PodcastEpisode, construct_episode
 from podcast import media
+from util import user_utils
 
 
 def construct_podcast_episode(name: str, uid: str) -> list[PodcastEpisode]:
@@ -30,13 +30,9 @@ def construct_podcast_episode(name: str, uid: str) -> list[PodcastEpisode]:
     return episodes
 
 
-def construct_podcast(name: str, uid: str, episodes: list[PodcastEpisode]) -> Podcast:
-    user = User()
+def construct_podcast(name: str, uid: int, episodes: list[PodcastEpisode]) -> Podcast:
     podcast = Podcast()
-    for u in CONFIG.listen[name].user:
-        if u.id == uid:
-            user = u
-
+    user = user_utils.match_user(name, uid)
     podcast.title = user.title
     podcast.author = user.author
     podcast.description = user.description
