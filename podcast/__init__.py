@@ -57,7 +57,7 @@ def construct_podcast_rss(podcast: Podcast) -> str:
         fe.enclosure(url=episode.url, length=0, type='audio/x-m4a')
         # fe.pubDate(episode.pubDate)
 
-    return fg.rss_str()
+    return fg.rss_str(pretty=True)
 
 
 def user_podcast(name, uid):

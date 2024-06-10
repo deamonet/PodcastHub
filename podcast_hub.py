@@ -1,6 +1,6 @@
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 
 import podcast
@@ -35,8 +35,8 @@ async def say_hello(name: str):
 
 
 @app.get("/podcast/{name}/{uid}")
-async def user_podcast(name: str, uid: int) -> str:
-    return podcast.user_podcast(name, uid)
+async def user_podcast(name: str, uid: int) -> Response:
+    return Response(content=podcast.user_podcast(name, uid), media_type="application/xml")
 
 
 if __name__ == '__main__':
