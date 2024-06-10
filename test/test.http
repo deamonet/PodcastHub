@@ -1,0 +1,5 @@
+###
+GET {{rss_host}}/bilibili/user/dynamic/{{mhy}}
+
+###
+GET {{host}}/podcast/bilibili/{{mhy}}

@@ -27,3 +27,11 @@ class Podcast:
 
     def __init__(self):
         pass
+
+
+def construct_episode(json_dict: dict[str, str]):
+    episode = PodcastEpisode()
+    for key, value in json_dict.items():
+        setattr(episode, key, value)
+
+    return episode

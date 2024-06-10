@@ -17,6 +17,7 @@ listen:
   bilibili:
     user:
       - id: 199676483
+        author: str
         title: str
         image_url: empty
         category: empty
@@ -30,3 +31,6 @@ storage:
   audio: /audio
   episode: /episode
   static: /static
+
+podcast:
+  max_episodes: 10

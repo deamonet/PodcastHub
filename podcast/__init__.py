@@ -6,15 +6,46 @@ from feedgen.feed import FeedGenerator
 import cache
 from configuration import CONFIG
 from constant import AUDIO_EXTENSION
-from entity.podcast import Podcast, PodcastEpisode
+from entity.configuration import User
+from entity.podcast import Podcast, PodcastEpisode, construct_episode
 from podcast import media
 
 
-def user_podcast(name, uid):
-    pass
+def construct_podcast_episode(name: str, uid: str) -> list[PodcastEpisode]:
+    episodes_folder = f"{CONFIG.storage.episode}/{name}/{uid}"
+    episodes = []
+    counter = 0
+    for root, dirs, files in os.walk(episodes_folder):
+        for file in files:
+            if counter == CONFIG.podcast.max_episodes:
+                break
+
+            with open(root + "/" + file, "r") as f:
+                json_dict = json.load(f)
+                episodes.append(construct_episode(json_dict))
+
+            counter += 1
+
+        break
+    return episodes
 
 
-def construct_podcast(podcast: Podcast) -> str:
+def construct_podcast(name: str, uid: str, episodes: list[PodcastEpisode]) -> Podcast:
+    user = User()
+    podcast = Podcast()
+    for u in CONFIG.listen[name].user:
+        if u.id == uid:
+            user = u
+
+    podcast.title = user.title
+    podcast.author = user.author
+    podcast.description = user.description
+    podcast.episodes = episodes
+    podcast.category = user.category
+    return podcast
+
+
+def construct_podcast_rss(podcast: Podcast) -> str:
     fg = FeedGenerator()
     fg.load_extension('podcast')
     fg.title(podcast.title)
@@ -28,6 +59,12 @@ def construct_podcast(podcast: Podcast) -> str:
         fe.pubDate(episode.pubDate)
 
     return fg.rss_str()
+
+
+def user_podcast(name, uid):
+    episodes = construct_podcast_episode(name, uid)
+    podcast = construct_podcast(name, uid, episodes)
+    return construct_podcast_rss(podcast)
 
 
 def main_flow():

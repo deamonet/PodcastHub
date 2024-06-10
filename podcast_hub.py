@@ -1,10 +1,11 @@
+from contextlib import asynccontextmanager
+
+import uvicorn
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 import podcast
-from contextlib import asynccontextmanager
-from apscheduler.schedulers.background import BackgroundScheduler
-
 from configuration import CONFIG
 from rss.update import UPDATE_TASKS
 
@@ -29,9 +30,13 @@ async def podcast(name: str, uid: str) -> str:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print(app.__dict__)
     scheduler = BackgroundScheduler()
     for update in UPDATE_TASKS:
         scheduler.add_job(update.main_flow, "interval", hours=2)
     scheduler.add_job(podcast.main_flow, "interval", hours=2)
     scheduler.start()
     yield
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)

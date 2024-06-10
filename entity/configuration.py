@@ -20,6 +20,7 @@ class Cache(BaseModel):
 class User(BaseModel):
     id: str
     title: str | None = None
+    author: str | None = None
     category: list[str] | None = None
     image_url: str | None = None
     description: str | None = None
@@ -39,8 +40,13 @@ class Storage(BaseModel):
     static: str
 
 
+class PodcastConfig(BaseModel):
+    max_episodes: int | None = None
+
+
 class Configuration(BaseModel):
     rsshub: NetAddress
+    podcast: PodcastConfig
     redis: NetAddress
     cache: Cache
     listen: dict[str, Listen]
