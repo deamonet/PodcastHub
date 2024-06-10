@@ -12,24 +12,28 @@ def download_video(task: QueueTask):
         if len(files) != 0:
             return
 
-    os.system(f"cd {work_dir} | you-get {task.prefix}/{task.identifier}")
+    os.system(f"you-get --output-dir {work_dir} {task.prefix}{task.identifier}")
 
 
 def convert_video_to_audio(task: QueueTask):
     video_directory = f"{CONFIG.storage.video}/{task.name}/{task.identifier}"
     audio_directory = f"{CONFIG.storage.audio}/{task.name}/{task.identifier}"
+    os.system(f"mkdir -p {audio_directory}")
     video_file = ""
     file_name = ""
     for root, dirs, files in os.walk(video_directory):
         for file in files:
             file_name, _ = file.split(FILE_EXTENSION_DELIMITER)
-            video_file = root + file
+            video_file = root + "/" + file
             break
         break
 
     audio_file = f"{audio_directory}/{file_name}{AUDIO_EXTENSION}"
-    if os.path.isfile(audio_file):
+    if not os.path.exists(video_file):
+        return "empty"
+
+    if os.path.exists(audio_file):
         return audio_file
 
-    os.system(f"ffmpeg -i {video_file} -vn -acodec copy {audio_file}")
+    os.system(f"ffmpeg -i \"{video_file}\" -vn -acodec copy \"{audio_file}\"")
     return file_name

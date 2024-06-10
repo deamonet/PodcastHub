@@ -1,3 +1,8 @@
+server:
+  protocol: http
+  host: 192.168.1.105
+  port: 8000
+
 rsshub:
   protocol: http
   host: omv.local
@@ -17,12 +22,12 @@ listen:
   bilibili:
     user:
       - id: 199676483
-        author: str
-        title: str
-        image_url: empty
+        author: MHYYYY
+        title: MHYYYY
+        image_url: https://i2.hdslb.com/bfs/face/f7e24cfec824e0aaf67fdd62c960c13026768f70.jpg
         category:
-          - empty
-        description: empty
+          - 键政
+        description: 键政人
     route: user/dynamic
     video_url_prefix: https://www.bilibili.com/video/
 

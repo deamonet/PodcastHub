@@ -20,7 +20,7 @@ def construct_podcast_episode(name: str, uid: str) -> list[PodcastEpisode]:
             if counter == CONFIG.podcast.max_episodes:
                 break
 
-            with open(root + "/" + file, "r") as f:
+            with open(root + "/" + file, "r", encoding='utf-8') as f:
                 json_dict = json.load(f)
                 episodes.append(construct_episode(json_dict))
 
@@ -38,6 +38,8 @@ def construct_podcast(name: str, uid: int, episodes: list[PodcastEpisode]) -> Po
     podcast.description = user.description
     podcast.episodes = episodes
     podcast.category = user.category
+    podcast.image = user.image_url
+    podcast.link = f"{CONFIG.server.address}/{name}/{uid}"
     return podcast
 
 
@@ -46,13 +48,14 @@ def construct_podcast_rss(podcast: Podcast) -> str:
     fg.load_extension('podcast')
     fg.title(podcast.title)
     fg.description(podcast.description)
-    fg.image()
+    fg.image(podcast.image)
+    fg.link(href=podcast.link, rel='alternate')
     for episode in podcast.episodes:
         fe = fg.add_entry()
         fe.id(episode.url)
         fe.title(episode.title)
-        fe.enclosure(episode.url)
-        fe.pubDate(episode.pubDate)
+        fe.enclosure(url=episode.url, length=0, type='audio/x-m4a')
+        # fe.pubDate(episode.pubDate)
 
     return fg.rss_str()
 
@@ -69,9 +72,9 @@ def main_flow():
     file_name = media.convert_video_to_audio(task)
 
     episode = PodcastEpisode()
-    episode.url = "/".join([CONFIG.storage.static, task.name, task.identifier, file_name, AUDIO_EXTENSION])
+    episode.url = f"{CONFIG.server.address}/{CONFIG.storage.static}/{task.name}/{task.identifier}/{file_name}{AUDIO_EXTENSION}"
     episode.title = file_name
-    episode_folder = "/".join([CONFIG.storage.episode, task.name, task.id])
+    episode_folder = f"{CONFIG.storage.episode}/{task.name}/{task.id}"
     os.system(f"mkdir -p {episode_folder}")
     with open(f"{episode_folder}/{file_name}.json", "w", encoding="utf-8") as fi:
-        json.dump(episode.__dict__, fi)
+        json.dump(episode.__dict__, fi, ensure_ascii=False)

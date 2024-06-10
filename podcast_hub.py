@@ -5,21 +5,22 @@ from fastapi.staticfiles import StaticFiles
 
 import podcast
 from configuration import CONFIG
-from update import UPDATE_TASKS
+from update import Update
 
 app = FastAPI()
 app.mount(CONFIG.storage.static, StaticFiles(directory=CONFIG.storage.audio), name="static")
 
 
 @app.on_event("startup")
-async def lifespan():
+def lifespan():
     print(app.__dict__)
     scheduler = BackgroundScheduler()
-    for update in UPDATE_TASKS:
-        update.main_flow()
+    for update_class in Update.__subclasses__():
+        print(update_class.__name__)
+        update = update_class()
         scheduler.add_job(update.main_flow, "interval", hours=2)
-    podcast.main_flow()
-    scheduler.add_job(podcast.main_flow, "interval", hours=2)
+
+    scheduler.add_job(podcast.main_flow, "interval", minutes=1)
     scheduler.start()
 
 
@@ -39,4 +40,4 @@ async def user_podcast(name: str, uid: int) -> str:
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=CONFIG.server.port)

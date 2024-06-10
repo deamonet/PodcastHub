@@ -45,6 +45,7 @@ class PodcastConfig(BaseModel):
 
 
 class Configuration(BaseModel):
+    server: NetAddress
     rsshub: NetAddress
     podcast: PodcastConfig
     redis: NetAddress
